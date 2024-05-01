@@ -408,7 +408,7 @@ def find_max_mag_star():
 def calculate_new_mag():
     max_mag = find_max_mag_star()
     for curr_star in collection.find():
-        new_mag = -curr_star['mag'] + (max_mag * 50000)
+        new_mag = -curr_star['mag'] + (max_mag + 3)
         collection.update_one(
             {'_id': curr_star.get('_id')}, {'$set': {'new_mag': new_mag}}
         )
@@ -424,7 +424,10 @@ def get_stars_to_explore(latitude, longitude):
         result_stars.append([
             [curr_star['location']['coordinates'][0] - central_star_ra,
              curr_star['location']['coordinates'][1] - central_star_dec],
-            curr_star['new_mag']
+            curr_star['new_mag'],
+            curr_star['_id'],
+            [curr_star['location']['coordinates'][0],
+             curr_star['location']['coordinates'][1]]
         ])
 
     return result_stars
